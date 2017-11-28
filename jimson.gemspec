@@ -7,7 +7,7 @@ spec = Gem::Specification.new do |s|
   s.author = "Chris Kite"
   s.homepage = "http://www.github.com/chriskite/jimson"
   s.platform = Gem::Platform::RUBY
-  s.summary = "JSON-RPC 2.0 client and server"
+  s.summary = "JSON-RPC 2.0 client"
   s.require_path = "lib"
   s.has_rdoc = false
   #s.rdoc_options << '-m' << 'README.rdoc' << '-t' << 'Jimson'
@@ -15,9 +15,7 @@ spec = Gem::Specification.new do |s|
   s.add_dependency("blankslate", "~> 3.1", ">= 3.1.3")
   s.add_dependency("rest-client", "~> 1", ">= 1.7.3")
   s.add_dependency("multi_json", "~> 1", ">= 1.11.2")
-  s.add_dependency("rack", "~> 1", ">= 1.4.5")
   s.add_development_dependency("rspec", "~> 2.14", ">= 2.14.1")
-  s.add_development_dependency("rack-test")
   s.add_development_dependency("rake")
   s.add_development_dependency("rdoc", "~> 4.2", ">= 4.2.2")
 
