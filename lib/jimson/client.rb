@@ -11,13 +11,14 @@ module Jimson
       rand(10**12)
     end
 
-    def initialize(url, opts = {}, namespace = nil)
+    def initialize(url, headers = {}, namespace = nil, rest_client_options = {})
       @url = url
       URI.parse(@url) # for the sake of validating the url
       @batch = []
-      @opts = opts
+      @headers = headers
       @namespace = namespace
-      @opts[:content_type] = 'application/json'
+      @headers[:content_type] = 'application/json'
+      @rest_client_options = rest_client_options
     end
 
     def process_call(sym, args)
@@ -44,7 +45,8 @@ module Jimson
         'params'  => args,
         'id'      => self.class.make_id
       })
-      resp = RestClient.post(@url, post_data, @opts)
+      request_args = @rest_client_options.merge(method: :post, url: @url, payload: post_data, headers: @headers)
+      resp = RestClient::Request.execute(request_args)
       if resp.nil? || resp.body.nil? || resp.body.empty?
         raise Client::Error::InvalidResponse.new
       end
@@ -54,7 +56,8 @@ module Jimson
 
     def send_batch_request(batch)
       post_data = MultiJson.encode(batch)
-      resp = RestClient.post(@url, post_data, @opts)
+      request_args = @rest_client_options.merge(method: :post, url: @url, payload: post_data, headers: @headers)
+      resp = RestClient::Request.execute(request_args)
       if resp.nil? || resp.body.nil? || resp.body.empty?
         raise Client::Error::InvalidResponse.new
       end
@@ -150,9 +153,9 @@ module Jimson
       helper.send_batch
     end
 
-    def initialize(url, opts = {}, namespace = nil)
-      @url, @opts, @namespace = url, opts, namespace
-      @helper = ClientHelper.new(url, opts, namespace)
+    def initialize(url, headers = {}, namespace = nil, rest_client_options = {})
+      @url, @headers, @namespace, @rest_client_options = url, headers, namespace, rest_client_options
+      @helper = ClientHelper.new(url, headers, namespace, rest_client_options)
     end
 
     def method_missing(sym, *args, &block)
@@ -163,7 +166,7 @@ module Jimson
       if method.is_a?(Symbol)
         # namespace requested
         new_ns = @namespace.nil? ? "#{method}." : "#@namespace#{method}."
-        return Client.new(@url, @opts, new_ns)
+        return Client.new(@url, @headers, new_ns)
       end
       @helper.process_call(method, args)
     end
