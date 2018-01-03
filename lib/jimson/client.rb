@@ -79,6 +79,8 @@ module Jimson
       if !!data['error']
         code = data['error']['code']
         msg = data['error']['message']
+        data = data['error']['data']
+        msg += " #{data}" if data
         raise Client::Error::ServerError.new(code, msg)
       end
 
