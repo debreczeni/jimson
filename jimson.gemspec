@@ -12,7 +12,7 @@ spec = Gem::Specification.new do |s|
   s.has_rdoc = false
   #s.rdoc_options << '-m' << 'README.rdoc' << '-t' << 'Jimson'
   s.extra_rdoc_files = ["README.md"]
-  s.add_dependency("rest-client", "~> 1", ">= 1.7.3")
+  s.add_dependency("rest-client", ">= 1.7.3")
   s.add_dependency("multi_json", "~> 1", ">= 1.11.2")
   s.add_development_dependency("rspec", "~> 2.14", ">= 2.14.1")
   s.add_development_dependency("rake")
